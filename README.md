@@ -15,3 +15,6 @@ http://localhost:8080/base/
 https://o-u-u.com/?p=196
 
 # xml aop没有生效
+解决：
+https://blog.csdn.net/yj1499945/article/details/86679432
+contextConfigLocation 看来 我没有理解 springmvc 两个配置加载的顺序；
