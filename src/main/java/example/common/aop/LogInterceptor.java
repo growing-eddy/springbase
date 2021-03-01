@@ -17,7 +17,7 @@ public class LogInterceptor {
 
     /*@Before("execution(public void com.oumyye.dao.impl.UserDAOImpl.save(com.oumyye.model.User))")*/
     public void before() {
-        System.out.println("method staet");
+        System.out.println("method start");
     }
 
     public void after() {

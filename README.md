@@ -2,6 +2,8 @@
 jdk8
 tomcat1.8
 
+项目根路径为 ：/base
+
 启动后访问地址：
 http://localhost:8080/base/home/index
 自动启动页面：

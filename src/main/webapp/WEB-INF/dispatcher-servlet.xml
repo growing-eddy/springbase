@@ -3,6 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:beans="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
     <!--此文件负责整个mvc中的配置-->
 
@@ -10,7 +11,41 @@
     <context:annotation-config/>
 
     <!-- 配置注解驱动 可以将request参数与绑定到controller参数上 -->
-    <mvc:annotation-driven/>
+    <!--配置一个json 消息转换器-->
+    <mvc:annotation-driven content-negotiation-manager="contentManager">
+        <mvc:message-converters register-defaults="true">
+            <beans:bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <beans:constructor-arg value="UTF-8"/>
+            </beans:bean>
+            <beans:bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <beans:property name="objectMapper">
+                    <beans:bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <beans:property name="dateFormat">
+                            <beans:bean class="java.text.SimpleDateFormat">
+                                <beans:constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss"/>
+                            </beans:bean>
+                        </beans:property>
+                    </beans:bean>
+                </beans:property>
+            </beans:bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <beans:bean id="contentManager"
+                class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <beans:property name="favorPathExtension" value="true"/>
+        <beans:property name="ignoreAcceptHeader" value="true"/>
+        <beans:property name="defaultContentType" value="application/json"/>
+        <beans:property name="useJaf" value="false"/>
+        <beans:property name="mediaTypes">
+            <beans:map>
+                <beans:entry key="json" value="application/json"/>
+                <beans:entry key="html" value="text/html"/>
+                <beans:entry key="xml" value="application/xml"/>
+            </beans:map>
+        </beans:property>
+
+    </beans:bean>
 
     <!--静态资源映射-->
     <!--本项目把静态资源放在了webapp的statics目录下，资源映射如下-->
