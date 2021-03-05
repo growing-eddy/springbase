@@ -20,3 +20,6 @@ https://o-u-u.com/?p=196
 解决：
 https://blog.csdn.net/yj1499945/article/details/86679432
 contextConfigLocation 看来 我没有理解 springmvc 两个配置加载的顺序；
+-- 要注意spring配置和MVC的配置
+解答： https://blog.csdn.net/qq_35571554/article/details/82464236
+正常情况下，Spring的配置文件扫描service层和dao层，springmvc扫描controller

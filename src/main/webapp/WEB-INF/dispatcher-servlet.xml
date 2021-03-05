@@ -3,9 +3,13 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:beans="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+       xmlns:beans="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
     <!--此文件负责整个mvc中的配置-->
+    <!-- 一定要配置在springMVC的配置类中 配置 controller的自动扫描装配-->
+    <!--springMVC 做为子容器可以访问父容器（spring配置中描述的）的类，但是父容器不能使用子容器的类-->
+    <!-- 自动扫描装配 -->
+    <context:component-scan base-package="example.controller"/>
 
     <!--启用spring的一些annotation -->
     <context:annotation-config/>
@@ -63,21 +67,29 @@
         <property name="exposeContextBeansAsAttributes" value="true"/>
     </bean>
 
-    <bean id="logInterceptor" class="example.common.aop.LogInterceptor"></bean>
 
+
+
+
+    <!--controller层的aop是可以正常使用的-->
     <aop:config>
         <aop:aspect ref="logInterceptor">
             <aop:pointcut expression="execution(* example.controller.FirstController.index(..))"
-                          id="servicePointcut"/>
-            <aop:before method="before"  pointcut-ref="servicePointcut" />
+                          id="controllerPointcut"/>
+            <aop:before method="before"  pointcut-ref="controllerPointcut" />
         </aop:aspect>
     </aop:config>
 
-    <!-- 自动扫描装配 -->
-    <context:component-scan base-package="example.controller"/>
-    <context:component-scan base-package="example.common.aop"/>
+    <!-- 定义请求处理映射HandlerMapping -->
+    <!--<bean id="handlerMapping" class="example.controller.xml.XmlController">-->
+        <!--&lt;!&ndash; 指定请求和Controller对应关系 &ndash;&gt;-->
+        <!--<property name="mappings" ref="urlMappings" />-->
+    <!--</bean>-->
 
-
+    <!--&lt;!&ndash; 定义请求映射表 map &ndash;&gt;-->
+    <!--<util:properties id="urlMappings">-->
+        <!--<prop key="/hello.form">xmlController</prop>-->
+    <!--</util:properties>-->
 
 
 

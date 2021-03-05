@@ -4,7 +4,31 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!-- 事务一定要配置在spring的配置类中-->
+    <!--启用spring的一些annotation -->
+    <context:annotation-config/>
+    <context:component-scan base-package="example.common.aop"/>
+    <context:component-scan base-package="example.service"/>
 
+    <!--定义在spring和MVC容器都可以生效-->
+    <bean id="logInterceptor" class="example.common.aop.LogInterceptor"></bean>
 
+    <!--增加一个打印log的 aop-->
+    <!-- #NO# controller层的aop是不起作用的，因为此配置文件是用于加载到spring容器中的，而controller是加载到springMVC容器中的需要在springMVC配置中声明，才会生效-->
+    <aop:config>
+        <aop:aspect ref="logInterceptor">
+            <aop:pointcut expression="execution(* example.controller.FirstController.index(..))"
+                          id="controllerPointcut"/>
+            <aop:before method="before"  pointcut-ref="controllerPointcut" />
+        </aop:aspect>
+    </aop:config>
 
+    <!--service层的aop是可以正常使用的-->
+    <aop:config>
+        <aop:aspect ref="logInterceptor">
+            <aop:pointcut expression="execution(* example.service.FirstService.index(..))"
+                          id="servicePointcut"/>
+            <aop:before method="before"  pointcut-ref="servicePointcut" />
+        </aop:aspect>
+    </aop:config>
 </beans>
