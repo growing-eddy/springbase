@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * @author zhaodg
  * @date 2021/1/25
  */
-@Service
+@Service("firstService")
 public class FirstService {
 
     public void index(){
